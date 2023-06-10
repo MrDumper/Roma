@@ -77,18 +77,18 @@ def wanna_to_continue():
 def menu():
     wanna_to_input = 'Введите значение\n'
     functions = {
-        '1': inch_to_cm(1),
-        '2': cm_to_inch(1),
-        '3': miles_to_km(1),
-        '4': km_to_miles(1),
-        '5': lb_to_kg(1),
-        '6': kg_to_lb(1),
-        '7': ounce_to_gram(1),
-        '8': gram_to_ounce(1),
-        '9': gallon_to_liter(1),
-        '10': liter_to_gallon(1),
-        '11': pint_to_liter(1),
-        '12': liter_to_pint(1)
+        '1': inch_to_cm,
+        '2': cm_to_inch,
+        '3': miles_to_km,
+        '4': km_to_miles,
+        '5': lb_to_kg,
+        '6': kg_to_lb,
+        '7': ounce_to_gram,
+        '8': gram_to_ounce,
+        '9': gallon_to_liter,
+        '10': liter_to_gallon,
+        '11': pint_to_liter,
+        '12': liter_to_pint
     }
     print('Добро пожаловать')
     god_var = True
@@ -111,7 +111,7 @@ def menu():
         if choice in functions:
             var = int(input(wanna_to_input))
             print(functions[choice](var))
-            wanna_to_continue()
+            god_var = wanna_to_continue()
         elif choice == '0':
             break
         else:
