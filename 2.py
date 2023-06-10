@@ -63,19 +63,36 @@ def wanna_to_continue():
         print('Желаете продолжить?')
         print('1. Да')
         print('2. Нет(Выход)')
-        choice = (input())
+        choice = input()
         if choice == '1':
-            return 1
+            print('')
+            return True
         elif choice == '2':
-            return 0
+            break
+            return False
         else:
             print('Выбрана неверная опция попробуйте еще раз')
 
 
 def menu():
+    wanna_to_input = 'Введите значение\n'
+    functions = {
+        '1': inch_to_cm(),
+        '2': cm_to_inch(),
+        '3': miles_to_km(),
+        '4': km_to_miles(),
+        '5': lb_to_kg(),
+        '6': kg_to_lb(),
+        '7': ounce_to_gram(),
+        '8': gram_to_ounce(),
+        '9': gallon_to_liter(),
+        '10': liter_to_gallon(),
+        '11': pint_to_liter(),
+        '12': liter_to_pint()
+    }
     print('Добро пожаловать')
-    while True:
-        wanna_to_input = "Введите значение"
+    god_var = True
+    while god_var is True:
         print('Выберите интересующую вас опцию:')
         print('1. Дюймы в сантиметры')
         print('2. Сантиметры в дюймы')
@@ -91,102 +108,10 @@ def menu():
         print('12. Литры в пинты')
         print('0. Выход')
         choice = (input())
-        if choice == '1':
-            print(wanna_to_input)
-            print(f'{inch_to_cm(int(input()))}  cm')
-            _continue = wanna_to_continue()
-            if _continue == 1:
-                print('')
-            else:
-                break
-        elif choice == '2':
-            print(wanna_to_input)
-            print(f'{cm_to_inch(int(input()))} inch')
-            _continue = wanna_to_continue()
-            if _continue == 1:
-                print('')
-            else:
-                break
-        elif choice == '3':
-            print(wanna_to_input)
-            print(miles_to_km(int(input())), ' km')
-            _continue = wanna_to_continue()
-            if _continue == 1:
-                print('')
-            else:
-                break
-        elif choice == '4':
-            print(wanna_to_input)
-            print(km_to_miles(int(input())), ' miles')
-            _continue = wanna_to_continue()
-            if _continue == 1:
-                print('')
-            else:
-                break
-        elif choice == '5':
-            print(wanna_to_input)
-            print(lb_to_kg(int(input())), ' kg')
-            _continue = wanna_to_continue()
-            if _continue == 1:
-                print('')
-            else:
-                break
-        elif choice == '6':
-            print(wanna_to_input)
-            print(kg_to_lb(int(input())), ' lb')
-            _continue = wanna_to_continue()
-            if _continue == 1:
-                print('')
-            else:
-                break
-        elif choice == '7':
-            print(wanna_to_input)
-            print(ounce_to_gram(int(input())), ' gram')
-            _continue = wanna_to_continue()
-            if _continue == 1:
-                print('')
-            else:
-                break
-        elif choice == '8':
-            print(wanna_to_input)
-            print(gram_to_ounce(int(input())), ' ounce')
-            _continue = wanna_to_continue()
-            if _continue == 1:
-                print('')
-            else:
-                break
-        elif choice == '9':
-            print(wanna_to_input)
-            print(gallon_to_liter(int(input())), ' liter')
-            _continue = wanna_to_continue()
-            if _continue == 1:
-                print('')
-            else:
-                break
-        elif choice == '10':
-            print(wanna_to_input)
-            print(liter_to_gallon(int(input())), ' gallon')
-            _continue = wanna_to_continue()
-            if _continue == 1:
-                print('')
-            else:
-                break
-        elif choice == '11':
-            print(wanna_to_input)
-            print(pint_to_liter(int(input())), ' liter')
-            _continue = wanna_to_continue()
-            if _continue == 1:
-                print('')
-            else:
-                break
-        elif choice == '12':
-            print(wanna_to_input)
-            print(liter_to_pint(int(input())), ' pint')
-            _continue = wanna_to_continue()
-            if _continue == 1:
-                print('')
-            else:
-                break
+        if choice in functions:
+            var = int(input(wanna_to_input))
+            print(functions[choice](var))
+            wanna_to_continue()
         elif choice == '0':
             break
         else:
