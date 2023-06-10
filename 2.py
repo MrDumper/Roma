@@ -68,7 +68,7 @@ def wanna_to_continue():
             print('')
             return True
         elif choice == '2':
-            break
+            exit()
             return False
         else:
             print('Выбрана неверная опция попробуйте еще раз')
@@ -92,7 +92,7 @@ def menu():
     }
     print('Добро пожаловать')
     god_var = True
-    while god_var is True:
+    while True:
         print('Выберите интересующую вас опцию:')
         print('1. Дюймы в сантиметры')
         print('2. Сантиметры в дюймы')
@@ -111,7 +111,7 @@ def menu():
         if choice in functions:
             var = int(input(wanna_to_input))
             print(functions[choice](var))
-            god_var = wanna_to_continue()
+            wanna_to_continue()
         elif choice == '0':
             break
         else:
