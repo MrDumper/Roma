@@ -66,10 +66,8 @@ def wanna_to_continue():
         choice = input()
         if choice == '1':
             print('')
-            return True
         elif choice == '2':
             exit()
-            return False
         else:
             print('Выбрана неверная опция попробуйте еще раз')
 
