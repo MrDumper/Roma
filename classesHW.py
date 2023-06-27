@@ -69,8 +69,7 @@ class Square(Figure):
         self.point_b = point_2
 
     def side_of_square(self):
-        side = side_1 = math.sqrt(pow((self.point_a.x - self.point_b.x), 2) + pow((self.point_a.y - self.point_b.y), 2))
-        return side
+        return math.sqrt(pow((self.point_a.x - self.point_b.x), 2) + pow((self.point_a.y - self.point_b.y), 2))
 
     def perimeter(self):
         return self.side_of_square() * 4
