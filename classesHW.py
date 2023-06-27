@@ -1,10 +1,11 @@
+import math
+from abc import ABC, abstractmethod
+
+
 class Point:
     def __init__(self, x, y):
         self.x = x
         self.y = y
-
-
-from abc import ABC, abstractmethod
 
 
 class Figure(ABC):
@@ -12,21 +13,20 @@ class Figure(ABC):
     def perimeter(self):
         pass
 
+    @abstractmethod
     def square(self):
         pass
 
 
-import math
-
-
 class Circle(Figure):
     class_name = 'Circle'
+
     def __init__(self, point: Point, radius):
         self.point = point
         self.radius = radius
 
     def perimeter(self):
-        perimeter = 2 * 3.14 * self.radius
+        perimeter = 2 * math.pi * self.radius
         return perimeter
 
     def square(self):
@@ -36,6 +36,7 @@ class Circle(Figure):
 
 class Triangle(Figure):
     class_name = 'Triangle'
+
     def __init__(self, point_1: Point, point_2: Point, point_3: Point):
         self.point_a = point_1
         self.point_b = point_2
@@ -45,7 +46,7 @@ class Triangle(Figure):
         side_1 = math.sqrt(pow((self.point_a.x - self.point_b.x), 2) + pow((self.point_a.y - self.point_b.y), 2))
         side_2 = math.sqrt(pow((self.point_b.x - self.point_c.x), 2) + pow((self.point_b.y - self.point_c.y), 2))
         side_3 = math.sqrt(pow((self.point_c.x - self.point_a.x), 2) + pow((self.point_c.y - self.point_a.y), 2))
-        return [side_1, side_2, side_3]
+        return side_1, side_2, side_3
 
     def perimeter(self):
         sides_ = self.sides()
@@ -55,12 +56,14 @@ class Triangle(Figure):
     def square(self):
         sides_ = self.sides()
         half_perimeter = self.perimeter() / 2
-        square = math.sqrt(half_perimeter*(half_perimeter-sides_[0])*(half_perimeter-sides_[1])*(half_perimeter-sides_[2]))
+        square = math.sqrt(
+            half_perimeter * (half_perimeter - sides_[0]) * (half_perimeter - sides_[1]) * (half_perimeter - sides_[2]))
         return square
 
 
 class Square(Figure):
     class_name = 'Square'
+
     def __init__(self, point_1: Point, point_2: Point):
         self.point_a = point_1
         self.point_b = point_2
@@ -70,7 +73,7 @@ class Square(Figure):
         return side
 
     def perimeter(self):
-        return self.side_of_square()*4
+        return self.side_of_square() * 4
 
     def square(self):
         return pow(self.side_of_square(), 2)
