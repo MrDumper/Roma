@@ -4,20 +4,26 @@ class Point:
         self.y = y
 
 
-class Figure:
-    pass
+from abc import ABC, abstractmethod
+
+
+class Figure(ABC):
+    @abstractmethod
+    def perimeter(self):
+        pass
+
+    def square(self):
+        pass
 
 
 import math
 
 
-class Circle(Figure, Point):
-    def __init__(self, radius):
+class Circle(Figure):
+    class_name = 'Circle'
+    def __init__(self, point: Point, radius):
+        self.point = point
         self.radius = radius
-
-    @classmethod
-    def circle_constructor(cls):
-        
 
     def perimeter(self):
         perimeter = 2 * 3.14 * self.radius
@@ -28,11 +34,12 @@ class Circle(Figure, Point):
         return square
 
 
-class Triangle(Figure, Point):
-    def __init__(self, x1, y1, x2, y2, x3, y3):
-        self.point_a = super().__init__(x1, y1)
-        self.point_b = super().__init__(x2, y2)
-        self.point_c = super().__init__(x3, y3)
+class Triangle(Figure):
+    class_name = 'Triangle'
+    def __init__(self, point_1: Point, point_2: Point, point_3: Point):
+        self.point_a = point_1
+        self.point_b = point_2
+        self.point_c = point_3
 
     def sides(self):
         side_1 = math.sqrt(pow((self.point_a.x - self.point_b.x), 2) + pow((self.point_a.y - self.point_b.y), 2))
@@ -52,10 +59,11 @@ class Triangle(Figure, Point):
         return square
 
 
-class Square(Figure, Point):
-    def __init__(self, x1, y1, x2, y2):
-        self.point_a = super().__init__(x1, y1)
-        self.point_b = super().__init__(x2, y2)
+class Square(Figure):
+    class_name = 'Square'
+    def __init__(self, point_1: Point, point_2: Point):
+        self.point_a = point_1
+        self.point_b = point_2
 
     def side_of_square(self):
         side = side_1 = math.sqrt(pow((self.point_a.x - self.point_b.x), 2) + pow((self.point_a.y - self.point_b.y), 2))
