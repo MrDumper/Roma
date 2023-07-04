@@ -1,3 +1,7 @@
+class MyException(Exception):
+    print("your speed is below zero!")
+
+
 class Car:
     def __init__(self, mark, model, year):
         self.mark = mark
@@ -11,28 +15,29 @@ class Car:
     def increase_speed(self):
         if self.speed >= 0:
             self.speed = self.speed + 5
-        else:
-            self.speed = self.speed - 5
         print(f'Your speed has been increased: {self.speed}')
 
     def reduce_speed(self):
-        if self.speed >= 5:
+        try:
+            if self.speed - 5 < 0:
+                raise MyException
             self.speed = self.speed - 5
-        elif self.speed <= -5:
-            self.speed = self.speed + 5
-        else:
-            self.speed = 0
-        print(f'Your speed has been reduced: {self.speed}')
+            print(f'Your speed has been reduced: {self.speed}')
+        except MyException:
+            print("MyException get called!")
 
     def stop_car(self):
-        self.speed = 0
-        print('Car stopped')
+        try:
+            self.speed = 0
+            print('Car stopped')
+        except(self.speed == 0):
+            print('Your car has been stopped already!')
 
     def print_speed(self):
         print(f'Your speed is: {self.speed}')
 
-    def reverse_car(self):
-        self.speed = self.speed * -1
+    @staticmethod
+    def reverse_car():
         print('You have been reversed')
 
 
@@ -44,3 +49,5 @@ car.increase_speed()
 car.reduce_speed()
 car.stop_car()
 car.print_speed()
+car.stop_car()
+car.reduce_speed()
