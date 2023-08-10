@@ -43,7 +43,7 @@ class TemperaturePydantic(BaseModel):
 
     @field_validator('temp')
     def validate_temp(cls, temp: int):
-        return temp * 1.8 + 32
+        return round(temp * 1.8 + 32, 3)
 
 
 class WeatherPydantic(BaseModel):
@@ -67,7 +67,7 @@ def test_get_weather(mocker):
         return_value=Mock(
             status_code=200,
             text=json.dumps(
-                {
+
                     {
                         "coord": {
                             "lon": 50,
@@ -82,7 +82,7 @@ def test_get_weather(mocker):
                         "base": "stations",
                         "main": {
                              "temp": 33.27,
-                             "feels_like": 40.27,
+                             "feels_like": 0.0,
                              "temp_min": 33.27,
                              "temp_max": 33.27,
                              "pressure": 1001,
@@ -109,16 +109,16 @@ def test_get_weather(mocker):
                         "name": "Jubail",
                         "cod": 200
                     }
-                }
+
             )
         )
     )
     test_loc = Location(50, 28)
-    result = test_loc.get_weather()
+    actual = test_loc.get_weather()
     expected = WeatherPydantic(
         temperature=TemperaturePydantic.model_construct(
-            temp=33.27*9/5 + 32,
-            feels_like=40.27,
+            temp=round(33.27*1.8 + 32, 3),
+            feels_like=0.00,
             temp_min=33.27,
             temp_max=33.27
         ),
@@ -126,4 +126,4 @@ def test_get_weather(mocker):
         description='clear sky',
         name='Jubail',
     )
-    assert result == expected
+    assert actual == expected
