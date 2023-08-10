@@ -1,6 +1,6 @@
-import json
+import json, requests, pytest
 from pydantic import BaseModel, field_validator
-import requests
+from unittest.mock import Mock, MagicMock
 
 
 class Location:
@@ -9,9 +9,30 @@ class Location:
         self._latitude = latitudecls
 
     def get_weather(self):
-        weather_data = requests.get(f'https://fcc-weather-api.glitch.me/api/current?lat={self._latitude}&lon={self._longitude}')
+        weather_data = requests.get(
+            f'https://fcc-weather-api.glitch.me/api/current?lat={self._latitude}&lon={self._longitude}')
         data = json.loads(weather_data.text)
-        return data
+        try:
+            if weather_data.status_code != 200:
+                raise Exception(f'Error request, status code : {weather_data.status_code}')
+            try:
+                feels_like_temp = data.get['main']['feels_like']
+            except:
+                feels_like_temp = 0
+            dict_for_weather = {
+                'temperature': {
+                    'temp': data['main']['temp'],
+                    'feels_like': feels_like_temp,
+                    'temp_min': data['main']['temp_min'],
+                    'temp_max': data['main']['temp_max']
+                },
+                'pressure': data['main']['pressure'],
+                'description': data['weather'][0]['description'],
+                'name': data['name']
+            }
+        except Exception as e:
+            return None
+        return WeatherPydantic(**dict_for_weather)
 
 
 class TemperaturePydantic(BaseModel):
@@ -22,7 +43,7 @@ class TemperaturePydantic(BaseModel):
 
     @field_validator('temp')
     def validate_temp(cls, temp: int):
-        return temp*1.8 + 32
+        return temp * 1.8 + 32
 
 
 class WeatherPydantic(BaseModel):
@@ -32,29 +53,77 @@ class WeatherPydantic(BaseModel):
     name: str
 
 
-longitude = int(input('Please enter longitude: '))
-latitude = int(input('Please inter latitude: '))
-loc = Location(longitude, latitude)
-data_dict = loc.get_weather()
-#print(data_dict)
-keys_1 = ['weather', 'main', 'name']
-keys_temperature = ['temp', 'temp_min', 'temp_max', 'feels_like']
-keys_weather = ['pressure', 'description', 'name']
-dict_main = {**data_dict['main']}
-dict_for_temperature = {}
-for key in keys_temperature:
-    if key in dict_main:
-        dict_for_temperature[key] = dict_main[key]
-dict_for_weather = {}
-for key in keys_weather:
-    if key in dict_main:
-        dict_for_weather[key] = dict_main[key]
-    if key in data_dict:
-        dict_for_weather[key] = data_dict[key]
-description = data_dict.pop('weather')
-desc_dict = description[0]
-dict_for_weather['description'] = desc_dict['description']
-temp_1 = TemperaturePydantic(**dict_for_temperature)
-dict_for_weather['temperature'] = temp_1
-weather = WeatherPydantic(**dict_for_weather)
+# longitude = int(input('Please enter longitude: '))
+# latitude = int(input('Please inter latitude: '))
+loc = Location(50, 38)
+weather = loc.get_weather()
 print(weather)
+
+
+def test_get_weather(mocker):
+    mocker.patch.object(
+        requests,
+        'get',
+        return_value=Mock(
+            status_code=200,
+            text=json.dumps(
+                {
+                    {
+                        "coord": {
+                            "lon": 50,
+                            "lat": 28
+                        }, "weather": [
+                            {
+                                "id": 800,
+                                "main": "Clear",
+                                "description": "clear sky",
+                            }
+                        ],
+                        "base": "stations",
+                        "main": {
+                             "temp": 33.27,
+                             "feels_like": 40.27,
+                             "temp_min": 33.27,
+                             "temp_max": 33.27,
+                             "pressure": 1001,
+                             "humidity": 72,
+                             "sea_level": 1001,
+                             "grnd_level": 1001
+                         },
+                        "visibility": 10000,
+                        "wind": {
+                             "speed": 3.25,
+                             "deg": 258,
+                             "gust": 3.6
+                         },
+                        "clouds": {
+                             "all": 1
+                         },
+                        "dt": 1691623796,
+                        "sys": {
+                             "country": "SA",
+                             "sunrise": 1691633230,
+                             "sunset": 1691681029},
+                        "timezone": 12600,
+                        "id": 109435,
+                        "name": "Jubail",
+                        "cod": 200
+                    }
+                }
+            )
+        )
+    )
+    test_loc = Location(50, 28)
+    result = test_loc.get_weather()
+    expected = WeatherPydantic(
+        temperature=TemperaturePydantic.model_construct(
+            temp=33.27*9/5 + 32,
+            feels_like=40.27,
+            temp_min=33.27,
+            temp_max=33.27
+        ),
+        pressure=1001,
+        description='clear sky',
+        name='Jubail',
+    )
+    assert result == expected
